@@ -1,7 +1,7 @@
 import os
 
 def main():
-    name = os.get_env("USERNAME")
+    name = os.getenv("USERNAME")
     print(f"Hello, {name}!")
 
 if __name__ == "__main__":
