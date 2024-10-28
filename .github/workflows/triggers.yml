@@ -1,28 +1,53 @@
 name: Triggers
+run-name: ¡Estoy aprendiendo a usar diferentes Triggers!
 on:
-    push:
-    pull_request:
-        branches:
-            - main
-            - feature/*
-            - bugfix/*
-            - hotfix/*
-
-    issue_comment:
-        types: [created, edited]
-
-    schedule:
-        - cron: '15 0,12 * * *'
-
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**.py'
+  issues:
+    types:
+      - labeled
+  workflow_dispatch:
+    inputs:
+      lenguaje_favorito:
+        description: 'Lenguaje favorito'
+        default: Python
+        required: true
+        type: choice
+        options:
+        - Python
+        - JavaScript
+        - Go
+      nombre:
+        description: 'Tu nombre'
+        required: true
+        default: Juan
+        type: string
+  schedule:
+    - cron:  '15 22 * * *'
 jobs:
-    triggers:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v3
-          - name: Set up Python 3.10
-            uses: actions/setup-python@v3
-            with:
-              python-version: '3.10'
-          - name: Define environment variable
-            run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+  hola-mundo-manual:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Definir nombre
+        run: echo "USERNAME=${{ inputs.nombre }}" >> $GITHUB_ENV
+      - name: Definir lenguaje
+        run: echo "LANGUAGE=${{ inputs.lenguaje_favorito }}" >> $GITHUB_ENV
+      - name: Correr script
+        run: python hola_lenguaje.py
+  hola-mundo:
+    if: ${{ github.event_name != 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Definir variable
+        run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+      - name: Correr script
+        run: python hola_mundo.py
