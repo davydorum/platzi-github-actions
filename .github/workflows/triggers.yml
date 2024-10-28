@@ -1,0 +1,28 @@
+name: Triggers
+on:
+    push:
+    pull_request:
+        branches:
+            - main
+            - feature/*
+            - bugfix/*
+            - hotfix/*
+
+    issue_comment:
+        types: [created, edited]
+
+    schedule:
+        - cron: '15 0,12 * * *'
+
+jobs:
+    triggers:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+          - name: Set up Python 3.10
+            uses: actions/setup-python@v3
+            with:
+              python-version: '3.10'
+          - name: Define environment variable
+            run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
